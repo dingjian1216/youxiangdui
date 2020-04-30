@@ -1,0 +1,81 @@
+@import "./common.less";
+// 公共样式
+//*{
+//  font-family: '苹方';
+//}
+
+*{
+  moz-user-select: -moz-none;
+  -moz-user-select: none;
+  -o-user-select:none;
+  -khtml-user-select:none;
+  -webkit-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+
+html,body{
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  color: @font-col;
+  overflow-x: hidden;
+  font-size: 0.3rem;
+}
+ul,ol{
+  list-style: none;
+}
+
+img{
+  display: inline-block;
+  width: 100%;
+}
+
+input,textarea{
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+}
+
+input::-webkit-input-placeholder{
+  color: #999999;
+}
+input:-moz-placeholder{
+  color: #999999;
+}
+input::-moz-placeholder{
+  color: #999999;
+}
+input:-ms-input-placeholder{
+  color: #999999;
+}
+
+#app{
+  overflow-x: hidden;
+  .vux-header{
+    padding: 0;
+    // background: #fff;
+    border-bottom: 1px solid @list-border;
+    .vux-header-left{
+      font-size: .36rem;
+      font-weight: 500;
+      i{
+        color: #ffffff;
+        font-size: .4rem;
+      }
+    }
+    .vux-header-title{
+      height: 0.88rem;
+      //font-weight: bold;
+      line-height: 0.88rem;
+      color: #ffffff;
+    }
+  }
+}
+
+.vux-confirm{
+  line-height: 16px;
+  .weui-dialog__hd{
+    padding: 0.4rem 0.5rem 0.16rem;
+  }
+}
