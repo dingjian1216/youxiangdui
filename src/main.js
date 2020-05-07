@@ -44,13 +44,13 @@ Vue.prototype.$echarts = echarts
 
   // vueObj 为了方便别的webview调用此vue对象
 //   if(process.env.NODE_ENV === "development"){
-  // window.vueObj = new Vue({
-  //   el: '#app',
-  //   router,
-  //   store,
-  //   components: {App},
-  //   template: '<App/>'
-  // })
+  window.vueObj = new Vue({
+    el: '#app',
+    router,
+    store,
+    components: {App},
+    template: '<App/>'
+  })
 // }else{
 
 // 测试环境代码 —————————————end—————————————————

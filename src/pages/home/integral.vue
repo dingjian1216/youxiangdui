@@ -82,7 +82,6 @@ export default {
           that.bankInfo = res.data.bankInfo;
           that.userInfo = res.data.userInfo;
           that.list = res.data.list;
-          that.initMeiQia();
         }
       });
     let text =
@@ -96,102 +95,14 @@ export default {
     );
   },
   methods: {
-    openApp: function() {
-      var ksrk_url = this.bankInfo.ksrk_url; //网页地址
-      var iosUrl = this.bankInfo.iosUrl; //ios应用名
-      var androidPkg = this.bankInfo.androidPkg; //应用包名
-      var openurl = this.bankInfo.andro_d_url; //安卓下载地址
-      var appBundle = androidPkg;
-      if (api.systemType == "ios") {
-        openurl = this.bankInfo.ios_d_url; //IOS下载地址
-        appBundle = iosUrl;
-      }
-      if (this.bankInfo.app_switch == 1) {
-        api.appInstalled(
-          {
-            appBundle: appBundle
-          },
-          function(ret, err) {
-            if (ret.installed) {
-              //应用已安装
-              api.openApp({
-                iosUrl: iosUrl,
-                androidPkg: androidPkg,
-                mimeType: "text/html"
-              });
-            } else {
-              //应用未安装
-              api.openApp(
-                {
-                  iosUrl: openurl,
-                  androidPkg: androidPkg,
-                  mimeType: "text/html",
-                  uri: openurl
-                },
-                function(ret, err) {
-                  alert(JSON.stringify(err));
-                }
-              );
-            }
-          }
-        );
-      } else if (ksrk_url) {
-        api.openApp(
-          {
-            iosUrl: ksrk_url,
-            androidPkg: "android.intent.action.VIEW",
-            mimeType: "text/html",
-            uri: ksrk_url
-          },
-          function(ret, err) {}
-        );
-      }
-    },
+
     service() {
-      this.masNum = 0;
-      var mq = api.require("meiQia");
-      mq.show();
-    },
-    initMeiQia() {
-      let that = this;
-      var mq = api.require("meiQia");
-      var param = {
-        appkey: "2ef5f225ccadc3240e5c8b64780102ad"
-      };
-      mq.initMeiQia(param, function(ret, err) {
-        if (ret) {
-          //初始化成功
-          var titleColor = {
-            color: "#000"
-          };
-          mq.setTitleColor(titleColor);
-          //设置ID
-          var customizedIdParam = {
-            id: 'ID' + that.userInfo.mobile
-          };
-          console.log('ID' + that.userInfo.mobile)
-          mq.setLoginCustomizedId(customizedIdParam);
-          //设置自定义信息
-          var infoParam = {
-            name: that.userInfo.name,
-            tel: that.userInfo.mobile,
-            comment: that.bankInfo.name
-          };
-          mq.setClientInfo(infoParam);
-          mq.addMessageListener(function(ret, err) {
-            if (ret) {
-              mq.getUnreadMessageCount(function(ret) {
-                that.masNum = ret.count;
-              });
-            }
-          });
-          mq.getUnreadMessageCount(function(ret) {
-            that.masNum = ret.count;
-          });
-        } else {
-        }
+     var browser = api.require("webBrowser");
+      browser.open({
+        url: 'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname='+this.userInfo.name+'&visitorid='+this.userInfo.mobile+''
       });
     },
+
     shibie() {
       let that = this;
       var baiduAd = api.require("baiduIdentifyOCR");

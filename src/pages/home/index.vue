@@ -88,7 +88,6 @@ export default {
     apiHttp.myIndex(store.state.global.token).then(res => {
       if (res.code == 1) {
         this.userInfo = res.data;
-        this.initMeiQia();
         this.$store.commit("setUserInfo", res.data);
       }
     });
@@ -96,8 +95,6 @@ export default {
       if (res.code === 1) {
       }
     });
-
-    
   },
 
   methods: {
@@ -126,46 +123,9 @@ export default {
       });
     },
     service() {
-      this.masNum = 0;
-      var mq = api.require("meiQia");
-      mq.show();
-    },
-    initMeiQia() {
-      let that = this;
-      var mq = api.require("meiQia");
-      var param = {
-        appkey: "2ef5f225ccadc3240e5c8b64780102ad"
-      };
-      mq.initMeiQia(param, function(ret, err) {
-        if (ret) {
-          //初始化成功
-          var titleColor = {
-            color: "#000"
-          };
-          mq.setTitleColor(titleColor);
-          //设置ID
-          var customizedIdParam = {
-            id:  'ID' + that.userInfo.mobile
-          };
-          mq.setLoginCustomizedId(customizedIdParam);
-          //设置自定义信息
-          var infoParam = {
-            name: that.userInfo.name,
-            tel: that.userInfo.mobile,
-          };
-          mq.setClientInfo(infoParam);
-          mq.addMessageListener(function(ret, err) {
-            if (ret) {
-              mq.getUnreadMessageCount(function(ret) {
-                that.masNum = ret.count;
-              });
-            }
-          });
-          mq.getUnreadMessageCount(function(ret) {
-            that.masNum = ret.count;
-          });
-        } else {
-        }
+      var browser = api.require("webBrowser");
+      browser.open({
+        url: 'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname='+this.userInfo.name+'&visitorid='+this.userInfo.mobile+''
       });
     }
   }
