@@ -77,7 +77,8 @@ export default {
       order_id: this.$route.query.id,
       info: "",
       sn: "",
-      userName: ""
+      userName: "",
+      daYinTime: ''
     };
   },
   mounted() {
@@ -109,163 +110,166 @@ export default {
       var SunmiPrinter = api.require("sunmiPrinter");
       let format = "down" + new Date().getTime() + ".jpg";
       let info = that.info;
-      api.download(
-        {
-          url: that.info.member_sign + "?imageView2/1/w/360/h/160",
-          savePath: "fs://" + format,
-          report: true,
-          cache: true,
-          allowResume: true
-        },
-        function(ret, err) {
-          if (ret.state == 1) {
-            SunmiPrinter.printData(
-              {
-                data: [
-                  {
-                    rowtype: "setAlignment",
-                    alignment: 1
-                  },
-                  {
-                    rowtype: "setFontSize",
-                    fontsize: 28
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "优享兑智能POS机\n"
-                  },
-                  {
-                    rowtype: "lineWrap",
-                    n: 1
-                  },
-                  {
-                    rowtype: "setAlignment",
-                    alignment: 0
-                  },
-                  {
-                    rowtype: "setFontSize",
-                    fontsize: 24
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  积分兑换交易凭证\n"
-                  },
-                  {
-                    rowtype: "setFontSize",
-                    fontsize: 16
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "   (持卡人存根)\n"
-                  },
-                  {
-                    rowtype: "setFontSize",
-                    fontsize: 20
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  ------------------------------------\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  转让方:     " + info.member_name + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  联系方式:   " + info.member_mobile + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  商品:       " + info.good_name + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  交易金额:    " + info.price + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  受让方:      " + that.userName + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  消耗积分:    " + info.integral + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  交易流水号:  " + info.order_number + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  交易时间:    " + info.create_time + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  ------------------------------------\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  签名:\n"
-                  },
-                  {
-                    rowtype: "setAlignment",
-                    alignment: 1
-                  },
-                  {
-                    rowtype: "printBitmap",
-                    image: "fs://" + format
-                  },
-                  {
-                    rowtype: "lineWrap",
-                    n: 1
-                  },
-                  {
-                    rowtype: "setAlignment",
-                    alignment: 0
-                  },
-                  {
-                    rowtype: "printText",
-                    text:
-                      "    本人确认以上物品交易抵扣的积分是本  人所持有的，且同意将上述积分数量范围  内兑换的礼品用上述协商价格不可撤销的  转让给受让人。如因此产生纠纷，双方可  协商或向人民法院起诉解决。\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  ------------------------------------\n"
-                  },
-                  {
-                    rowtype: "setFontSize",
-                    fontsize: 18
-                  },
-                  {
-                    rowtype: "printText",
-                    text: "  SN: " + that.sn + "\n"
-                  },
-                  {
-                    rowtype: "printText",
-                    text:
-                      "  本小票金额只做参考,以实际到账金额为准,最  终解释权为优享兑智能终端"
-                  },
-                  {
-                    rowtype: "lineWrap",
-                    n: 5
-                  }
-                ]
-              },
-              function(ret, err) {
-                if (ret) {
-                  let text = "打印成功，感谢您的使用，祝您生意兴隆！";
-                  var bdTTS = api.require("bdTTS");
-                  bdTTS.speak(
+      if(this.daYinTime){
+        this.$vux.toast.text('已打印,请勿重复打印');
+        return
+      }else {
+        this.daYinTime = new Date().getTime()
+        api.download(
+          {
+            url: that.info.member_sign + "?imageView2/1/w/360/h/160",
+            savePath: "fs://" + format,
+            report: true,
+            cache: true,
+            allowResume: true
+          },
+          function(ret, err) {
+            if (ret.state == 1) {
+              SunmiPrinter.printData(
+                {
+                  data: [
                     {
-                      text: text
+                      rowtype: "setAlignment",
+                      alignment: 1
                     },
-                    function(ret) {}
-                  );
+                    {
+                      rowtype: "setFontSize",
+                      fontsize: 28
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "积分妙兑智能POS机\n"
+                    },
+                    {
+                      rowtype: "lineWrap",
+                      n: 1
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 0
+                    },
+                    {
+                      rowtype: "setFontSize",
+                      fontsize: 24
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  积分兑换交易凭证\n"
+                    },
+                    {
+                      rowtype: "setFontSize",
+                      fontsize: 16
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "   (持卡人存根)\n"
+                    },
+                    {
+                      rowtype: "setFontSize",
+                      fontsize: 20
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  ------------------------------------\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  转让方:     " + info.member_name + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  联系方式:   " + info.member_mobile + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  商品:       " + info.good_name + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  交易金额:    " + info.price + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  消耗积分:    " + info.integral + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  交易流水号:  " + info.order_number + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  交易时间:    " + info.create_time + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  ------------------------------------\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  签名:\n"
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 1
+                    },
+                    {
+                      rowtype: "printBitmap",
+                      image: "fs://" + format
+                    },
+                    {
+                      rowtype: "lineWrap",
+                      n: 1
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 0
+                    },
+                    {
+                      rowtype: "printText",
+                      text:
+                        "    本人确认以上物品交易抵扣的积分是本  人所持有的，且同意将上述积分数量范围  内兑换的礼品用上述协商价格不可撤销的  转让给受让人。如因此产生纠纷，双方可  协商或向人民法院起诉解决。\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  ------------------------------------\n"
+                    },
+                    {
+                      rowtype: "setFontSize",
+                      fontsize: 18
+                    },
+                    {
+                      rowtype: "printText",
+                      text: "  SN: " + that.sn + "\n"
+                    },
+                    {
+                      rowtype: "printText",
+                      text:
+                        "  本小票金额只做参考,以实际到账金额为准,最  终解释权为积分秒兑"
+                    },
+                    {
+                      rowtype: "lineWrap",
+                      n: 5
+                    }
+                  ]
+                },
+                function(ret, err) {
+                  if (ret) {
+                    that.oneDaYin = true;
+                    let text = "打印成功，感谢您的使用，祝您生意兴隆！";
+                    var bdTTS = api.require("bdTTS");
+                    bdTTS.speak(
+                      {
+                        text: text
+                      },
+                      function(ret) {}
+                    );
+                  }
                 }
-              }
-            );
+              );
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
 };

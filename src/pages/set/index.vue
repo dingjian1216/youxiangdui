@@ -19,8 +19,12 @@
         应用市场
       </div>
       <div class="setList" @click="andSet">
-        <span class="iconfont icon-qunfengzhanghushezhi"></span>
+        <span class="iconfont icon-qunfengzhanghushezhi" style="color: #e65013"></span>
         系统设置
+      </div>
+       <div class="setList" @click="hardwarekeeper" >
+        <span class="iconfont icon-yingjianguanli" style="color: #e65013; font-size: 0.5rem"></span>
+        硬件管家
       </div>
     </div>
   </div>
@@ -39,19 +43,11 @@ export default {
       api.openApp({ androidPkg: "woyou.market" });
     },
     androidPic() {
-      api.getPicture(
-        {
-          sourceType: "library",
-          mediaValue: "all",
-          destinationType: "url",
-          allowEdit: true,
-          quality: 50,
-          targetWidth: 100,
-          targetHeight: 100,
-          saveToPhotoAlbum: false
-        },
-        function(ret, err) {}
-      );
+      api.openApp({androidPkg: 'com.sunmi.gallery'},function(ret,err){
+      })
+    },
+    hardwarekeeper(){
+      api.openApp({ androidPkg: "com.woyou.hardwarekeeper" });
     }
   }
 };

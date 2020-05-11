@@ -3,22 +3,20 @@
     <div class="head">
       <div class="myHead">
         <div class="myMsg">
-          <img :src="info.picture" @click="jumpTo('/info')" alt />
+          <img src="../../assets/img/logo.png" alt />
           <div class="name">
-            <span v-if="info.name">{{info.name}}</span>
-            <span v-else>{{info.nickname}}</span>
-            <span class="realName" @click="jumpTo('/realName')" v-if="info.is_auth == 0">去实名</span>
+            <span>SN: {{sn}} 名称: {{name}}</span>
           </div>
         </div>
         <div class="profit">
-          <div class="all" @click="jumpTo('/profit')">
-            <div class="name">累计收入</div>
+          <div class="all">
+            <div class="name">累计兑换</div>
             <div class="num" v-if="showMoney == 1">{{info.sum_money}}</div>
             <div class="num" v-else>*****</div>
           </div>
           <div class="all">
-            <div class="name" @click="jumpTo('/profit')">可用收入</div>
-            <div class="num" v-if="showMoney == 1">{{info.money}}</div>
+            <div class="name">累计积分</div>
+            <div class="num" v-if="showMoney == 1">{{info.sum_integral}}万</div>
             <div class="num" v-else>*****</div>
           </div>
           <div class="all">
@@ -52,51 +50,6 @@
         </div>
       </div>
     </div>
-    <div class="tool">
-      <div class="title">
-        <div>常用功能</div>
-      </div>
-      <div class="toolBox">
-        <div class="toolList" @click="jumpTo('/profit')">
-          <i class="iconfont icon-wodezijin" style="color:#E8541E"></i>
-          <div class="aui-gird-lable aui-font-size-12">我的资产</div>
-        </div>
-        <div class="toolList" v-if="ifIos" @click="jumpTo('/achievement')">
-          <i class="iconfont icon-wodechengjiu" style="color:#108EE9"></i>
-          <div class="aui-gird-lable aui-font-size-12">我的成就</div>
-        </div>
-        <!-- <div class="toolList">
-          <i class="iconfont icon-tuandui" style="color:#F49C2E" @click="jumpTo('/team')"></i>
-          <div class="aui-gird-lable aui-font-size-12">我的团队</div>
-        </div> -->
-        <div class="toolList">
-          <i class="iconfont icon-guanyuwomen" style="color:#0BA194" @click="jumpTo('/about')"></i>
-          <div class="aui-gird-lable aui-font-size-12">关于我们</div>
-        </div>
-        <div class="toolList ">
-          <i class="iconfont icon-jiagebiao" style="color:#fc7506" @click="seePrice(1)"></i>
-          <div class="aui-gird-lable aui-font-size-12">用户表</div>
-        </div>
-        <div class="toolList">
-          <i class="iconfont icon-jifen11" style="color:#e65013" @click="seePrice(2)"></i>
-          <div class="aui-gird-lable aui-font-size-12">积分价格表</div>
-        </div>
-        <div class="toolList">
-          <i class="iconfont icon-huabanfuben" style="color:#E8541E" @click="getwx()"></i>
-          <div class="aui-gird-lable aui-font-size-12">联系客服</div>
-        </div>
-      </div>
-    </div>
-    <div v-transfer-dom>
-      <x-dialog v-model="showToast2" class="wxServer" hide-on-blur>
-        <div class="update">
-          <div class="name">扫码二维码添加微信</div>
-          <div class="twoCode" id="twoCodeqrcode" ref="twoCodeqrcode"></div>
-          <div class="addwx" @click="goWx()">关闭</div>
-        </div>
-        <i class="iconfont icon-close2 text-white" style="font-size: 1.8rem" onclick="closeFrm()"></i>
-      </x-dialog>
-    </div>
   </div>
 </template>
 
@@ -122,12 +75,14 @@ export default {
       wx_num: "",
       showToast2: false,
       show: false,
-      statusH: ""
+      statusH: "",
+      sn: "",
+      name: store.state.global.userName
     };
   },
-   beforeRouteLeave(to, from, next) {
+  beforeRouteLeave(to, from, next) {
     let that = this;
-    if(to.name == 'success'){
+    if (to.name == "success") {
       that.$router.push("/home");
     }
     next();
@@ -145,6 +100,13 @@ export default {
     apiHttp.myIndex(store.state.global.token).then(res => {
       if (res.code == 1) {
         this.info = res.data;
+      }
+    });
+    let that = this;
+    let Getsn = api.require("moduleDemo");
+    Getsn.getSn({}, function(ret) {
+      if (ret.sn) {
+        that.sn = ret.sn;
       }
     });
   },
@@ -188,7 +150,12 @@ export default {
       } else {
         apiHttp.getWxNum().then(res => {
           if (res.code == 1) {
+            console.log(JSON.stringify(res));
             this.wx_num = res.data.wx_num;
+            if (!res.data.wx_num) {
+              this.$vux.toast.text("当前未设置微信客服");
+              return;
+            }
             this.showToast2 = true;
             let canvas1 = qrcanvas({
               data: res.data.wx_num,
@@ -249,16 +216,17 @@ export default {
   box-sizing: border-box;
   .head {
     background: #e65013;
-    padding: 1rem 0.3rem 0.3rem;
+    padding: 1.2rem 0.3rem 0.3rem;
     .myHead {
       background: #ffffff;
       border-radius: 0.2rem;
       .myMsg {
         text-align: center;
+        padding: 0.3rem 0;
         img {
           width: 1.2rem;
           border-radius: 50%;
-          margin-top: -0.6rem;
+          margin-top: -1.6rem;
         }
         .name {
           font-size: 0.32rem;

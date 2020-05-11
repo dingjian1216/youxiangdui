@@ -9,7 +9,7 @@ let baseApiUrl = window.location.host
 if (baseApiUrl.indexOf('192.168') !== -1 || baseApiUrl.indexOf('localhost') !== -1) {
   baseApiUrl = '/api/'
 } else {
-  baseApiUrl = 'http://yxd.xingciji.com/api/'
+  baseApiUrl = 'http://uat.xingciji.com/api/'
 }
 axios.defaults.baseURL = baseApiUrl
 
@@ -34,6 +34,10 @@ axios.interceptors.request.use(
     Vue.$vux.loading.show({
       text: '数据加载中……'
     })
+    let sn = store.state.global.sn;
+    if(sn){
+      config.data.sn  = sn
+    }
     promiseArr[config.url] = cancel
     return config
   },

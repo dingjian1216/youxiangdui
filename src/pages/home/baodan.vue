@@ -48,6 +48,7 @@
         <group>
           <x-input title="真实姓名：" placeholder="请输入真实姓名" v-model="realname"></x-input>
           <x-input title="手机号码:" placeholder="请输入手机号码" v-model="mobile" type="number"></x-input>
+          <x-input title="服务费(%):" placeholder="请输入服务费" v-model="fwf"></x-input>
         </group>
         <div class="autograph">
           <img :src="sign" alt v-if="sign" class="sign" @click="goSign" />
@@ -83,6 +84,7 @@ export default {
       couponMoney: "", //优惠金额
       couponId: "", // 优惠券Id
       lang: "", //优惠券数量
+      fwf: '10',//服务费
       sign: "",
       imgarr: "",
       goodName: "",
@@ -141,6 +143,7 @@ export default {
         vm.changeValue = 1;
         (vm.realname = ""), (vm.mobile = "");
         vm.getgoodsDetail();
+        vm.getAddress();
       }
       if (from.name == "my") {
         vm.getUser();
@@ -178,7 +181,6 @@ export default {
         that.userInfo = res.data.name;
       }
     });
-    this.getAddress();
   },
   methods: {
     mescrollInit(mescroll) {
@@ -290,7 +292,7 @@ export default {
           if (ret.data) {
             api.ajax(
               {
-                url: "http://yxd.xingciji.com/api/index/upload",
+                url: "http://uat.xingciji.com/api/index/upload",
                 method: "post",
                 timeout: 30,
                 data: {
@@ -381,7 +383,7 @@ export default {
       let that = this;
       api.ajax(
         {
-          url: "http://yxd.xingciji.com/api/index/upload",
+          url: "http://uat.xingciji.com/api/index/upload",
           method: "post",
           timeout: 30,
           data: {
@@ -415,7 +417,6 @@ export default {
     setOrder() {
       let imgPic = JSON.stringify(this.imgSrc);
       let that = this;
-      alert(this.userInfo);
       if (!this.sign) {
         this.$vux.toast.text("请签名后提交申请");
         return;
@@ -437,10 +438,13 @@ export default {
         this.$vux.toast.text("手机号码有误");
         return;
       }
-
+      if (!this.fwf) {
+        this.$vux.toast.text("请输入服务费");
+        return;
+      }
+      let fwf = this.fwf / 100
       apiHttp
         .setOrder(
-          store.state.global.token,
           this.pro_id,
           this.sms,
           imgPic,
@@ -448,7 +452,8 @@ export default {
           this.sign,
           this.realname,
           this.mobile,
-          this.address
+          this.address,
+          fwf,
         )
         .then(res => {
           if (res.code == 1) {
@@ -576,10 +581,10 @@ export default {
                     rowtype: "printText",
                     text: "  交易金额:   " + that.price + "\n"
                   },
-                  {
-                    rowtype: "printText",
-                    text: "  受让方:     " + that.userInfo + "\n"
-                  },
+                  // {
+                  //   rowtype: "printText",
+                  //   text: "  受让方:     " + that.userInfo + "\n"
+                  // },
                   {
                     rowtype: "printText",
                     text: "  消耗积分:    " + allJF + "\n"

@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
 	  '/api': {
         // target: 'http://www.jifendui.net/',
-        target: 'http://yxd.xingciji.com',
+        target: 'http://uat.xingciji.com',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api'

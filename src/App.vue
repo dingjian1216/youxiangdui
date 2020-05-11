@@ -1,13 +1,41 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <div id="header" :style="{height: h,}"></div>
     <div class="viewBox" :style="{top: h}">
       <router-view v-if="isRouterAlive" />
     </div>
+    <div v-transfer-dom>
+      <confirm
+        v-model="SnName"
+        :show-cancel-button="false"
+        placeholder="请输入终端名称"
+        title="提示"
+        show-input
+        ref="confirm"
+        @on-confirm="onConfirm"
+      ></confirm>
+    </div>
+    <div v-transfer-dom>
+      <x-dialog v-model="activity" id="showActivity" hide-on-blur>
+        <div class="showAction">
+          <img :src="active.cover" alt class="bg" @click="gourl()" />
+          <img src="./assets/img/close.png" class="close" @click="activity = false" />
+        </div>
+      </x-dialog>
+    </div>
   </div>
 </template>
 <script>
+import * as utils from "./utils";
+import { XDialog, Confirm, TransferDomDirective as TransferDom } from "vux";
 export default {
+  components: {
+    XDialog,
+    Confirm
+  },
+  directives: {
+    TransferDom
+  },
   name: "App",
   provide() {
     return {
@@ -17,10 +45,13 @@ export default {
   data() {
     return {
       isRouterAlive: true,
+      activity: false,
+      active: "",
       h: "",
       anh: 25,
+      SnName: false,
       iosh: 20,
-      hideTitle: ["home", "my",'sign'],
+      hideTitle: ["home", "my", "sign"],
       version: "",
       transitionName: ""
     };
@@ -39,7 +70,7 @@ export default {
       var bdTTS = api.require("bdTTS");
       bdTTS.speakPause(function(ret) {});
       if (to.name == "home") {
-        let text = "欢迎使用优享兑智能终端，请选择您要兑换的银行。";
+        let text = "选择可兑,一切可兑";
         var bdTTS = api.require("bdTTS");
         bdTTS.speak(
           {
@@ -58,6 +89,7 @@ export default {
   },
   created() {
     let that = this;
+    that.$store.commit("setSn", "VB09204E00609");
     // 进入前台
     let size = document.documentElement.clientWidth / 7.5;
     if (window.api) {
@@ -83,6 +115,13 @@ export default {
     } else {
       that.colors = "#fff";
     }
+    let sn = this.$store.state.global.sn;
+    let name = this.$store.state.global.userName;
+    this.getAdvertisement();
+    if (!sn || !name) {
+      this.isSn();
+      that.$store.commit("setSn", "VB09204E00609");
+    }
   },
   methods: {
     reload() {
@@ -90,6 +129,50 @@ export default {
       this.$nextTick(() => {
         this.isRouterAlive = true;
       });
+    },
+    isSn() {
+      let that = this;
+      that.SnName = true;
+      let Getsn = api.require("moduleDemo");
+      Getsn.getSn({}, function(ret) {
+        if (ret.sn) {
+          that.$store.commit("setSn", ret.sn);
+          that.sn = ret.sn;
+          that.SnName = true;
+        }
+      });
+    },
+    getAdvertisement() {
+      this.$http.post("news/getAdvertisement", {}).then(res => {
+        if (res.code === 1 && res.data.cover) {
+          this.activity = true;
+          this.active = res.data;
+        }
+      });
+    },
+    gourl() {
+      if (this.active.url) {
+        var browser = api.require("webBrowser");
+        this.activity = false;
+        browser.open({
+          url: this.active.url
+        });
+      } else {
+        this.activity = false;
+      }
+    },
+    onConfirm(value) {
+      let that = this;
+      this.$http
+        .post("/stock/active", { sn: this.sn, name: value })
+        .then(res => {
+          if (res.code == 0) {
+            that.$vux.toast.text("激活成功");
+            that.$store.commit("setUserName", value);
+          } else {
+            that.$vux.toast.text(res.msg);
+          }
+        });
     }
   },
   mounted() {
@@ -101,25 +184,42 @@ export default {
       function(ret) {}
     );
     var bdTTS = api.require("bdTTS");
-      bdTTS.speakPause(function(ret) {});
-      let text = "欢迎使用优享兑智能终端，请选择您要兑换的银行。";
-      var bdTTS = api.require("bdTTS");
-      bdTTS.speak(
-        {
-          text: text
-        },
-        function(ret) {}
-      );
-    
+    bdTTS.speakPause(function(ret) {});
+    let text = "选择可兑,一切可兑";
+    var bdTTS = api.require("bdTTS");
+    bdTTS.speak(
+      {
+        text: text
+      },
+      function(ret) {}
+    );
   }
 };
 </script>
+<style lang="less">
+#showActivity .weui-dialog {
+  background-color: transparent;
+  z-index: 5010;
+}
+.showAction {
+  .close {
+    margin-top: 0.2rem;
+    width: 0.5rem;
+  }
+}
+</style>
 <style lang="less">
 @import "~vux/src/styles/reset.less";
 @import "~vux/src/styles/1px.less";
 @import "./assets/less/app.less";
 @import "./assets/less/font.css";
-
+.weui-dialog__btn_primary {
+  color: #e65013;
+  z-index: 100;
+}
+.vux-prompt {
+  margin-top: 0.2rem;
+}
 #app {
   height: 100%;
   position: relative;

@@ -2,12 +2,10 @@
 import * as utils from '../../utils'
 
 const state = {
-  token: utils.storage.get('token'),
   sign: utils.storage.get('sign'),
   bank: utils.storage.get('bank'),
-  userInfo: utils.storage.get('userInfo') ? utils.storage.get('userInfo') : null,
-  commodity: utils.storage.get('commodity'),
-  couponpassMoney: utils.storage.get('couponpassMoney'),
+  sn: utils.storage.get('sn'),
+  userName: utils.storage.get('userName'),
   loading: false,
   moneyShow: utils.storage.get('moneyShow'),
 }
@@ -16,8 +14,6 @@ const getters = {}
 
 const actions = {
   login (context, mobile, password) {
-    // const mobile = form.mobile.trim()
-    // const password = form.password.trim()
     return new Promise((resolve, reject) => {
       api.login(mobile, password).then(response => {
         if (response.code === 0) {
@@ -41,11 +37,11 @@ const mutations = {
     utils.storage.set('moneyShow', data)
     state.moneyShow = data
   },
-  setToken: (state, data) => {
-  	console.log(data)
-    utils.storage.set('token', data)
-    state.token = data
+  setSn: (state, data) => {
+    utils.storage.set('sn', data)
+    state.sn = data
   },
+
   setSign: (state, data) => {
     utils.storage.set('sign', data)
     state.sign = data
@@ -55,14 +51,12 @@ const mutations = {
     state.bank = data
   },
 
-  setUserInfo: (state, data) => {
-    utils.storage.set('userInfo', data)
-    state.userInfo = data
+  setUserName: (state, data) => {
+    console.log(data)
+    utils.storage.set('userName', data)
+    state.userName = data
   },
-  setCouponpassMoney: (state, data) => {
-    utils.storage.set('couponpassMoney', data)
-    state.couponpassMoney = data
-  },
+  
   show (state) {
     state.loading = true
   },

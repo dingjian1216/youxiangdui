@@ -62,7 +62,7 @@ export default {
             console.log(JSON.stringify(ret));
             api.ajax(
               {
-                url: "http://yxd.xingciji.com/api/index/upload",
+                url: "http://uat.xingciji.com/api/index/upload",
                 method: "post",
                 timeout: 30,
                 data: {

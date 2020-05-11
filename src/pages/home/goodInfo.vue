@@ -62,7 +62,7 @@ export default {
       canvas1: null,
       showCode: false,
       type: true,
-      changeName: '去兑换'
+      changeName: "去兑换"
     };
   },
 
@@ -88,8 +88,8 @@ export default {
             that.type = true;
             let link = this.list[0].dui.link;
             let androidPkg = this.list[0].dui.package;
-            if(!link && !androidPkg){
-              this.changeName = '去报单'
+            if (!link && !androidPkg) {
+              this.changeName = "去报单";
             }
           }
           that.qrcode();
@@ -98,16 +98,23 @@ export default {
   },
   methods: {
     openApp: function() {
-      this.showCode = true;
-      let text =
-        "详细教程请用手机扫描二维码，方便兑换过程中随时查看。最后报单请参考兑换流程里的报单示例图。";
-      var bdTTS = api.require("bdTTS");
-      bdTTS.speak(
-        {
-          text: text
-        },
-        function(ret) {}
-      );
+      
+      // this.showCode = true;
+      // let text =
+      //   "详细教程请用手机扫描二维码，方便兑换过程中随时查看。最后报单请参考兑换流程里的报单示例图。";
+      // var bdTTS = api.require("bdTTS");
+      // bdTTS.speak(
+      //   {
+      //     text: text
+      //   },
+      //   function(ret) {}
+      // );
+      this.$router.push({
+        name: "standard",
+        query: {
+          id: this.goods_id
+        }
+      });
     },
     openChange(num) {
       let type = this.list[0].dui.type;
@@ -116,10 +123,10 @@ export default {
       let id = this.list[0].dui.id;
       apiHttp.getgoodsDetail(id, store.state.global.token).then(res => {
         if (res.code === 1) {
-       
         }
       });
       let that = this;
+ 
       if (type.indexOf("4") >= 0) {
         that.$router.push({
           name: "integral",
@@ -139,16 +146,20 @@ export default {
           },
           function(ret) {}
         );
-        var browser = api.require("webBrowser");
-        browser.open({
-          url: link
-        });
+        api.openApp(
+          {
+            androidPkg: "android.intent.action.VIEW",
+            mimeType: "text/html",
+            uri: link
+          },
+          function(ret, err) {}
+        );
       } else if (androidPkg) {
         var bdTTS = api.require("bdTTS");
         bdTTS.speakPause(function(ret) {});
         that.showCode = false;
         let text =
-         "即将打开银行链接，按照兑换流程进行兑换操作，切记兑换过程中需要点击小浮窗上面的地址获取地址信息，兑换完成请截屏，截屏成功再点击小浮窗上面的报单按钮，回到兑换页面，点击兑换好了去报单。";
+          "即将打开银行链接，按照兑换流程进行兑换操作，切记兑换过程中需要点击小浮窗上面的地址获取地址信息，兑换完成请截屏，截屏成功再点击小浮窗上面的报单按钮，回到兑换页面，点击兑换好了去报单。";
         bdTTS.speak(
           {
             text: text
@@ -181,7 +192,7 @@ export default {
             }
           }
         );
-      }else{
+      } else {
         this.$router.push({
           name: "baodan",
           query: {

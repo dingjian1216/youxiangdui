@@ -23,7 +23,7 @@
         </div>
         <div class="navList" @click="jumpTo('/my')">
           <span class="iconfont icon-gerenzhongxin"></span>
-          个人中心
+          终端详情
         </div>
       </div>
     </header>
@@ -83,16 +83,6 @@ export default {
     apiHttp.getHomeNew().then(res => {
       if (res.code === 1) {
         this.bankBox = res.data.list;
-      }
-    });
-    apiHttp.myIndex(store.state.global.token).then(res => {
-      if (res.code == 1) {
-        this.userInfo = res.data;
-        this.$store.commit("setUserInfo", res.data);
-      }
-    });
-    apiHttp.getUserToken(store.state.global.token).then(res => {
-      if (res.code === 1) {
       }
     });
   },
