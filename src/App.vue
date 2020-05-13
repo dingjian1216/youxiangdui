@@ -53,7 +53,8 @@ export default {
       iosh: 20,
       hideTitle: ["home", "my", "sign"],
       version: "",
-      transitionName: ""
+      transitionName: "",
+      address: ""
     };
   },
   watch: {
@@ -117,10 +118,11 @@ export default {
     }
     let sn = this.$store.state.global.sn;
     let name = this.$store.state.global.userName;
-    this.getAdvertisement();
     if (!sn || !name) {
       this.isSn();
-      that.$store.commit("setSn", "VB09204E00609");
+      this.getAddress();
+    }else{
+      this.getAdvertisement();
     }
   },
   methods: {
@@ -151,6 +153,8 @@ export default {
       });
     },
     gourl() {
+      // this.$store.commit("setUserName", '');
+      // this.$store.commit("setSn", '');
       if (this.active.url) {
         var browser = api.require("webBrowser");
         this.activity = false;
@@ -161,13 +165,56 @@ export default {
         this.activity = false;
       }
     },
+
+    getAddress() {
+      var bMap = api.require("bMap");
+      var that = this;
+      bMap.getLocation(
+        {
+          accuracy: "100m",
+          autoStop: true,
+          filter: 1
+        },
+        function(ret, err) {
+          if (ret.status) {
+            bMap.getNameFromCoords(
+              {
+                lon: ret.lon,
+                lat: ret.lat
+              },
+              function(ret, err) {
+                if (ret.status) {
+                  that.address =
+                    ret.province +
+                    "-" +
+                    ret.city +
+                    "-" +
+                    ret.district +
+                    "-" +
+                    ret.streetName +
+                    "-" +
+                    ret.streetNumber;
+                }
+              }
+            );
+          } else {
+            alert(err.code);
+          }
+        }
+      );
+    },
     onConfirm(value) {
       let that = this;
       this.$http
-        .post("/stock/active", { sn: this.sn, name: value })
+        .post("/stock/active", {
+          sn: this.sn,
+          name: value,
+          address: this.address
+        })
         .then(res => {
           if (res.code == 0) {
             that.$vux.toast.text("激活成功");
+            that.getAdvertisement()
             that.$store.commit("setUserName", value);
           } else {
             that.$vux.toast.text(res.msg);
