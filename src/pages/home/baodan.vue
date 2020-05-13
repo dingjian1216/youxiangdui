@@ -531,7 +531,7 @@ export default {
                   },
                   {
                     rowtype: "printText",
-                    text: "优享兑智能POS机\n"
+                    text: "可兑智能POS机\n"
                   },
                   {
                     rowtype: "lineWrap",
@@ -645,7 +645,7 @@ export default {
                   {
                     rowtype: "printText",
                     text:
-                      "  本小票金额只做参考,以实际到账金额为准,最  终解释权为优享兑智能终端"
+                      "  本小票金额只做参考,以实际到账金额为准,最  终解释权为可兑智能终端"
                   },
                   {
                     rowtype: "lineWrap",

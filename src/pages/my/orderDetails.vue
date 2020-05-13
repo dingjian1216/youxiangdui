@@ -138,7 +138,7 @@ export default {
                     },
                     {
                       rowtype: "printText",
-                      text: "积分妙兑智能POS机\n"
+                      text: "可兑智能POS机\n"
                     },
                     {
                       rowtype: "lineWrap",

@@ -6,7 +6,7 @@
           <span class="iconfont icon-icon_kefu"></span>
           <p>客服</p>
         </div>
-        <span class="name">优享兑智能机</span>
+        <span class="name">可兑智能机</span>
         <div class="right" v-if="play" @click="isPlay()">
           <span class="iconfont icon-laba"></span>
           <p>播放</p>
