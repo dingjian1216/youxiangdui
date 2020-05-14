@@ -111,18 +111,9 @@ export default {
             paramStr: androidPkg
           },
           function(ret) {
-            if (ret.status == true && num !== 2) {
-              appManagerPlus.unInstallApp(
-                {
-                  pkgName: androidPkg
-                },
-                function(rets) {
-                  setTimeout(function() {
-                    that.openChange(2);
-                  }, 2000);
-                }
-              );
-            } else if (ret.status == false || num !== 2) {
+            if (ret.status) {
+              api.openApp({ androidPkg: androidPkg });
+            } else {
               Getsn.startActivity({
                 packageName: androidPkg
               });

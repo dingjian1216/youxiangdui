@@ -36,7 +36,7 @@ Vue.component('x-header', XHeader)
 
 Vue.use(plugin, {router: router})
 
-Vue.prototype.link = 'http://yxd.xingciji.com/'
+Vue.prototype.link = 'https://uat.xingciji.com/'
 
 Vue.prototype.$echarts = echarts 
 // 测试环境代码 —————————————start—————————————————

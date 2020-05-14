@@ -199,7 +199,7 @@ export default {
       }
       .name {
         margin-top: 0.2rem;
-        font-size: 0.24rem;
+        font-size: 0.3rem;
       }
       .ico {
         position: absolute;

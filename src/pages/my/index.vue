@@ -5,7 +5,7 @@
         <div class="myMsg">
           <img src="../../assets/img/logo.png" alt />
           <div class="name">
-            <span>SN: {{sn}} 名称: {{name}}</span>
+            <span>SN: {{sn}} 名称: {{info.stock_name}}</span>
           </div>
         </div>
         <div class="profit">
@@ -47,6 +47,17 @@
         <div class="orderList" @click="order(3)">
           <span class="iconfont icon-dkw_shenhetongguo"></span>
           <div class="name">已完成</div>
+        </div>
+      </div>
+    </div>
+        <div class="tool">
+      <div class="title">
+        <div>常用功能</div>
+      </div>
+      <div class="toolBox">
+        <div class="toolList ">
+          <i class="iconfont icon-jiagebiao" style="color:#fc7506" @click="seePrice(1)"></i>
+          <div class="aui-gird-lable aui-font-size-12">用户表</div>
         </div>
       </div>
     </div>
@@ -97,7 +108,7 @@ export default {
     }
   },
   mounted() {
-    apiHttp.myIndex(store.state.global.token).then(res => {
+    apiHttp.myIndex().then(res => {
       if (res.code == 1) {
         this.info = res.data;
       }

@@ -48,6 +48,7 @@ export default {
       activity: false,
       active: "",
       h: "",
+      sn:'',
       anh: 25,
       SnName: false,
       iosh: 20,
@@ -90,7 +91,6 @@ export default {
   },
   created() {
     let that = this;
-    that.$store.commit("setSn", "VB09204E00609");
     // 进入前台
     let size = document.documentElement.clientWidth / 7.5;
     if (window.api) {
@@ -212,8 +212,8 @@ export default {
           address: this.address
         })
         .then(res => {
-          if (res.code == 0) {
-            that.$vux.toast.text("激活成功");
+          if (res.code == 1) {
+            that.$vux.toast.text(res.msg);
             that.getAdvertisement()
             that.$store.commit("setUserName", value);
           } else {

@@ -20,6 +20,7 @@ const Sign = resolve => require(['../pages/home/sign.vue'], resolve)
 const MyOrder = resolve => require(['../pages/my/myOrder.vue'], resolve)
 const OrderDetails = resolve => require(['../pages/my/orderDetails.vue'], resolve)
 const My = resolve => require(['../pages/my'], resolve)
+const Price = resolve => require(['../pages/my/price.vue'], resolve)
 const Money = resolve => require(['../pages/my/money.vue'], resolve)
 
 Vue.use(Router)
@@ -130,7 +131,13 @@ const router = new Router({
           name: 'money',
           component: Money,
           meta: { title: '收支明细', keepAlive: false, isShowHead: true, isShowTab: false}
-        }
+        },
+        {
+          path: '/price',
+          name: 'price',
+          component: Price,
+          meta: { title: '用户表', keepAlive: false, isShowHead: true, isShowTab: false}
+        },
       ]
     },
 //登录和注册
