@@ -5,15 +5,23 @@
       <router-view v-if="isRouterAlive" />
     </div>
     <div v-transfer-dom>
-      <confirm
-        v-model="SnName"
-        :show-cancel-button="false"
-        placeholder="请输入终端名称"
-        title="提示"
-        show-input
-        ref="confirm"
-        @on-confirm="onConfirm"
-      ></confirm>
+      <x-dialog v-model="SnName" id="snAction">
+        <div class="snUserMsg">
+          <p class="title">激活机器</p>
+          <div class="machineBox">
+            <div class="machineList">
+              <input type="number" placeholder="代理商账号" v-model="username" />
+            </div>
+            <div class="machineList">
+              <input type="text" placeholder="代理商密码" v-model="password" />
+            </div>
+            <div class="machineList">
+              <input type="text" placeholder="请输入终端名称" v-model="name" />
+            </div>
+          </div>
+          <div class="machineBtn" @click="onConfirm()">确定</div>
+        </div>
+      </x-dialog>
     </div>
     <div v-transfer-dom>
       <x-dialog v-model="activity" id="showActivity" hide-on-blur>
@@ -48,7 +56,10 @@ export default {
       activity: false,
       active: "",
       h: "",
-      sn:'',
+      sn: "",
+      name: "",
+      username: "",
+      password: "",
       anh: 25,
       SnName: false,
       iosh: 20,
@@ -60,15 +71,20 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (this.hideTitle.indexOf(to.name) > -1 || !window.api) {
-        this.h = 0;
-      } else {
-        if (api.systemType === "android") {
-          this.h = this.anh;
+      if (window.api) {
+        if (this.hideTitle.indexOf(to.name) > -1) {
+          this.h = 0;
         } else {
-          this.h = this.iosh;
+          if (api.systemType === "android") {
+            this.h = this.anh;
+          } else {
+            this.h = this.iosh;
+          }
         }
+      }else{
+        this.h = this.anh;
       }
+
       var bdTTS = api.require("bdTTS");
       bdTTS.speakPause(function(ret) {});
       if (to.name == "home") {
@@ -121,7 +137,7 @@ export default {
     if (!sn || !name) {
       this.isSn();
       this.getAddress();
-    }else{
+    } else {
       this.getAdvertisement();
     }
   },
@@ -140,7 +156,6 @@ export default {
         if (ret.sn) {
           that.$store.commit("setSn", ret.sn);
           that.sn = ret.sn;
-          that.SnName = true;
         }
       });
     },
@@ -153,8 +168,6 @@ export default {
       });
     },
     gourl() {
-      // this.$store.commit("setUserName", '');
-      // this.$store.commit("setSn", '');
       if (this.active.url) {
         var browser = api.require("webBrowser");
         this.activity = false;
@@ -206,16 +219,19 @@ export default {
     onConfirm(value) {
       let that = this;
       this.$http
-        .post("/stock/active", {
+        .post("/stock/transfer_active", {
           sn: this.sn,
-          name: value,
-          address: this.address
+          name: this.name,
+          address: this.address,
+          username: this.username,
+          password: this.password
         })
         .then(res => {
           if (res.code == 1) {
+            this.SnName = false;
             that.$vux.toast.text(res.msg);
-            that.getAdvertisement()
-            that.$store.commit("setUserName", value);
+            that.getAdvertisement();
+            that.$store.commit("setUserName", res.data);
           } else {
             that.$vux.toast.text(res.msg);
           }
@@ -283,6 +299,43 @@ export default {
     top: 25px;
     width: 100%;
     bottom: 0;
+  }
+}
+
+#snAction {
+  .title {
+    height: 0.88rem;
+    line-height: 0.88rem;
+    font-size: 0.34rem;
+    color: #000;
+  }
+  .machineBox {
+    margin-top: 0.2rem;
+    padding: 0 0 0.2rem 0;
+    .machineList {
+      margin: 0.2rem 0.3rem;
+      border: 1px solid #dddddd;
+      height: 0.6rem;
+      line-height: 0.6rem;
+      border-radius: 0.15rem;
+      display: flex;
+      align-items: center;
+      padding-left: 5%;
+      input {
+        width: 90%;
+        height: 90%;
+        box-sizing: border-box;
+        line-height: 0.6rem;
+      }
+    }
+  }
+  .machineBtn {
+    height: 0.8rem;
+    line-height: 0.8rem;
+    border-top: 1px solid #eee;
+    font-size: 0.32rem;
+    color: #fff;
+    background: rgb(230, 80, 19);
   }
 }
 

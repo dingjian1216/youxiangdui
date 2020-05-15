@@ -5,25 +5,15 @@
       <table class="table" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
-            <th style="width: 20%;">银行</th>
-            <th style="width: 20%;">产品</th>
-            <th style="width: 15%;">用户</th>
-            <th style="width: 15%; color:#e65013" v-if="Index == 2">机主</th>
+            <th style="width: 20%;">银行名称</th>
+            <th style="width: 15%;">用户价</th>
             <th style="width: 15%;">审核周期</th>
             <th style="width: 15%;">起兑分</th>
           </tr>
         </thead>
         <tbody v-for="(vo, index) in list" :key="index">
-          <tr>
-            <td :rowspan="vo.goods_list_count">{{vo.name}}</td>
-            <td>{{vo['goods_list'][0]['goods_name']}}</td>
-            <td>{{vo['goods_list'][0]['hy_money']}}</td>
-            <td v-if="Index == 2" style="color:#e65013">{{vo['goods_list'][0]['hj_money']}}</td>
-            <td>{{vo['goods_list'][0]['settlement']}}</td>
-            <td>{{vo['goods_list'][0]['rise']}}</td>
-          </tr>
-          <tr v-for="(vo, index2) in vo['goods_list']" :key="index2" v-if="index2 >= 1">
-            <td>{{vo.goods_name}}</td>
+          <tr v-for="(vo, index2) in vo['goods_list']" :key="index2" >
+            <td>{{vo.name}}</td>
             <td>{{vo.hy_money}}</td>
             <td v-if="Index == 2" style="color:#e65013">{{vo.hj_money}}</td>
             <td>{{vo.settlement}}</td>

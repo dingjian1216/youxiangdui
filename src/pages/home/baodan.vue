@@ -665,7 +665,7 @@ export default {
                   );
                   setTimeout(function() {
                     that.$router.push("/success");
-                  }, 5000);
+                  }, 3000);
                 }
                 // alert(JSON.stringify(ret));
               }

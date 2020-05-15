@@ -99,7 +99,7 @@ export default {
     service() {
      var browser = api.require("webBrowser");
       browser.open({
-        url: 'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname='+this.userInfo.name+'&visitorid='+this.userInfo.mobile+''
+        url: 'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname='+this.userInfo.stock_name+''
       });
     },
 

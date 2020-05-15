@@ -57,7 +57,7 @@
       <div class="toolBox">
         <div class="toolList ">
           <i class="iconfont icon-jiagebiao" style="color:#fc7506" @click="seePrice(1)"></i>
-          <div class="aui-gird-lable aui-font-size-12">用户表</div>
+          <div class="aui-gird-lable aui-font-size-12">用户价格表</div>
         </div>
       </div>
     </div>
