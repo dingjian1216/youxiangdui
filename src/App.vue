@@ -81,7 +81,7 @@ export default {
             this.h = this.iosh;
           }
         }
-      }else{
+      } else {
         this.h = this.anh;
       }
 
@@ -150,12 +150,23 @@ export default {
     },
     isSn() {
       let that = this;
-      that.SnName = true;
       let Getsn = api.require("moduleDemo");
       Getsn.getSn({}, function(ret) {
         if (ret.sn) {
           that.$store.commit("setSn", ret.sn);
           that.sn = ret.sn;
+          that.checkSN(ret.sn);
+        }
+      });
+    },
+    checkSN(sn) {
+      this.$http.post("/stock/checkSN", { sn: sn }).then(res => {
+        if (res.code === 1) {
+          if(res.data.status !== 2){
+            this.SnName = true
+          }else{
+            this.$store.commit("setUserName", res.data);
+          }
         }
       });
     },

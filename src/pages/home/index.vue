@@ -36,7 +36,7 @@
           @click="jumpGood(item.id)"
         >
           <img :src="item.logo" alt />
-          <div class="ico" v-show="item.settlement == '全天秒结'">秒审</div>
+          <div class="ico" v-show="item.settlement == '秒审'">秒审</div>
           <p class="name">{{item.name}}</p>
         </div>
       </div>

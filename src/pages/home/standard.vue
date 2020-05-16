@@ -23,7 +23,9 @@ export default {
   data() {
     return {
       list: [],
-      goods_id: this.$route.query.id,
+      goodsId: this.$route.query.goodsId,
+      index: this.$route.query.index,
+      productId: this.$route.query.productId,
       showCode: false,
       showOne: false
     };
@@ -32,11 +34,16 @@ export default {
   mounted() {
     let that = this;
     apiHttp
-      .getgoodsProduct(this.goods_id, store.state.global.token)
+      .getgoodsProduct(this.goodsId)
       .then(res => {
         if (res.code === 1) {
           that.list = res.data;
           that.qrcode();
+        }
+      });
+      // 获取设备
+    apiHttp.getgoodsDetail(this.productId).then(res => {
+        if (res.code === 1) {
         }
       });
   },
@@ -49,20 +56,17 @@ export default {
     },
     qrcode: function() {
       let canvas1 = qrcanvas({
-        data: this.list[0].content_url,
+        data: this.list[this.index].content_url,
         size: 100
       });
       document.getElementById("twoCodeqrcode").appendChild(canvas1);
     },
     openChange(num) {
-      let type = this.list[0].dui.type;
-      let link = this.list[0].dui.link;
-      let androidPkg = this.list[0].dui.package;
-      let id = this.list[0].dui.id;
-      apiHttp.getgoodsDetail(id, store.state.global.token).then(res => {
-        if (res.code === 1) {
-        }
-      });
+      let type = this.list[this.index].dui.type;
+      let link = this.list[this.index].dui.link;
+      let androidPkg = this.list[this.index].dui.package;
+      let id = this.list[this.index].dui.id;
+
       let that = this;
       if (type.indexOf("4") >= 0) {
         that.$router.push({

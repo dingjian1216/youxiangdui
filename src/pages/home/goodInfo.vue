@@ -21,7 +21,7 @@
               <div class="num">{{item.dhnum}}</div>
               <div class="name1">兑换积次数</div>
             </div>
-            <div class="goExchange" @click="openApp()" v-if="type">操作指引</div>
+            <div class="goExchange" @click="openApp(index)" v-if="type">操作指引</div>
           </div>
         </div>
       </div>
@@ -97,22 +97,13 @@ export default {
       });
   },
   methods: {
-    openApp: function() {
-      
-      // this.showCode = true;
-      // let text =
-      //   "详细教程请用手机扫描二维码，方便兑换过程中随时查看。最后报单请参考兑换流程里的报单示例图。";
-      // var bdTTS = api.require("bdTTS");
-      // bdTTS.speak(
-      //   {
-      //     text: text
-      //   },
-      //   function(ret) {}
-      // );
+    openApp: function(index) {
       this.$router.push({
         name: "standard",
         query: {
-          id: this.goods_id
+          goodsId: this.goods_id,
+          productId: this.list[0].did,
+          index: index
         }
       });
     },
