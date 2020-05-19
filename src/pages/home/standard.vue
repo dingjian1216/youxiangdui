@@ -63,8 +63,8 @@ export default {
     },
     openChange(num) {
       let type = this.list[this.index].dui.type;
-      let link = this.list[this.index].dui.link;
-      let androidPkg = this.list[this.index].dui.package;
+      let link = this.list[this.index].link;
+      let androidPkg = this.list[this.index].package;
       let id = this.list[this.index].dui.id;
 
       let that = this;
@@ -72,7 +72,7 @@ export default {
         that.$router.push({
           name: "integral",
           query: {
-            id: that.list[0].dui.id
+            id: id
           }
         });
       } else if (link) {
@@ -87,13 +87,18 @@ export default {
           },
           function(ret) {}
         );
+        that.$router.go(-1)
         api.openApp(
           {
             androidPkg: "android.intent.action.VIEW",
             mimeType: "text/html",
             uri: link
           },
-          function(ret, err) {}
+          function(ret, err) {
+            // if(ret){
+            //   that.$router.go(-1)
+            // }
+          }
         );
       } else if (androidPkg) {
         var bdTTS = api.require("bdTTS");
@@ -109,6 +114,7 @@ export default {
         );
         let appManagerPlus = api.require("appManagerPlus");
         let Getsn = api.require("moduleDemo");
+        
         appManagerPlus.isInstalled(
           {
             paramType: 0,
@@ -116,7 +122,12 @@ export default {
           },
           function(ret) {
             if (ret.status) {
-              api.openApp({ androidPkg: androidPkg });
+              that.$router.go(-1)
+              api.openApp({ androidPkg: androidPkg },function(){
+                // if(ret){
+                //   that.$router.go(-1)
+                // }
+              });
             } else {
               Getsn.startActivity({
                 packageName: androidPkg
@@ -128,7 +139,7 @@ export default {
         this.$router.push({
           name: "baodan",
           query: {
-            id: this.list[0].did
+            id: this.list.id
           }
         });
       }

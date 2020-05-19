@@ -46,9 +46,9 @@
           </div>
         </div>
         <group>
-          <x-input title="真实姓名：" placeholder="请输入真实姓名" v-model="realname"></x-input>
-          <x-input title="手机号码:" placeholder="请输入手机号码" v-model="mobile" type="number"></x-input>
-          <x-input title="服务费(%):" placeholder="请输入服务费" v-model="fwf"></x-input>
+          <x-input title="真实姓名：" placeholder="请输入真实姓名" v-model="realname" :show-clear='false' ></x-input>
+          <x-input title="手机号码:" placeholder="请输入手机号码" v-model="mobile" type="number" :show-clear='false' ></x-input>
+          <x-input title="服务费(%):" placeholder="请输入服务费" v-model="fwf" :show-clear='false' ></x-input>
         </group>
         <div class="autograph">
           <img :src="sign" alt v-if="sign" class="sign" @click="goSign" />
