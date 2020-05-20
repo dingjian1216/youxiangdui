@@ -45,7 +45,7 @@
           <p>本机查看图文详情</p>
         </div>
         <div class="navList">
-          <qrcode  :value="code" :size='100'></qrcode>
+          <qrcode :value="code" :size="100"></qrcode>
           <p>手机查看图文详情</p>
         </div>
       </div>
@@ -57,7 +57,7 @@
 </template>
 <script>
 import * as apiHttp from "../../api/index";
-import { Qrcode} from "vux";
+import { Qrcode } from "vux";
 import store from "../../store";
 import { qrcanvas } from "qrcanvas";
 export default {
@@ -79,38 +79,48 @@ export default {
   },
   mounted() {
     let that = this;
-    apiHttp
-      .getgoodsProduct(this.goods_id, store.state.global.token)
-      .then(res => {
-        if (res.code === 1) {
-          that.list = res.data;
-          if (res.data[0].dui.type.indexOf("4") >= 0) {
-            that.type = false;
-            let text =
-              "点击去兑换，根据图文教程，提供相应的信息给咱们平台的客服，进行兑换。兑换完成后客服会自主报单，您可在初审通过页面打印相应小票，等待结算即可";
-            var bdTTS = api.require("bdTTS");
-            bdTTS.speak(
-              {
-                text: text
-              },
-              function(ret) {}
-            );
-          } else {
-            that.type = true;
-            let link = this.list[0].dui.link;
-            let androidPkg = this.list[0].dui.package;
-            if (!link && !androidPkg) {
-              this.changeName = "去报单";
-            }
+    apiHttp.getgoodsProduct(this.goods_id).then(res => {
+      if (res.code === 1) {
+        that.list = res.data;
+        if (res.data[0].dui.type.indexOf("4") >= 0) {
+          that.type = false;
+          let text =
+            "点击去兑换，根据图文教程，提供相应的信息给咱们平台的客服，进行兑换。兑换完成后客服会自主报单，您可在初审通过页面打印相应小票，等待结算即可";
+          var bdTTS = api.require("bdTTS");
+          bdTTS.speak(
+            {
+              text: text
+            },
+            function(ret) {}
+          );
+        } else {
+          that.type = true;
+          let link = this.list[0].dui.link;
+          let androidPkg = this.list[0].dui.package;
+          if (!link && !androidPkg) {
+            this.changeName = "去报单";
           }
         }
-      });
+      }
+    });
   },
   methods: {
     openApp: function(index) {
-        this.index = index
-        this.code = this.list[index].content_url;
-        this.showCode = false;
+      this.index = index;
+      this.code = this.list[index].content_url;
+      this.showCode = false;
+      let id = this.list[this.index].did;
+      // 获取设备
+      apiHttp.getgoodsDetail(id).then(res => {
+        if (res.code === 1) {
+        }
+      });
+    },
+    getText() {
+      var browser = api.require("webBrowser");
+      browser.open({
+        url: this.list[this.index].content_url
+      });
     },
     openChange(num) {
       let type = this.list[this.index].dui.type;
@@ -144,8 +154,8 @@ export default {
             uri: link
           },
           function(ret, err) {
-            if(ret){
-              that.showCode = true
+            if (ret) {
+              that.showCode = true;
             }
           }
         );
@@ -163,7 +173,7 @@ export default {
         );
         let appManagerPlus = api.require("appManagerPlus");
         let Getsn = api.require("moduleDemo");
-        
+
         appManagerPlus.isInstalled(
           {
             paramType: 0,
@@ -171,9 +181,9 @@ export default {
           },
           function(ret) {
             if (ret.status) {
-              api.openApp({ androidPkg: androidPkg },function(){
-                if(ret){
-                  that.showCode = true
+              api.openApp({ androidPkg: androidPkg }, function() {
+                if (ret) {
+                  that.showCode = true;
                 }
               });
             } else {

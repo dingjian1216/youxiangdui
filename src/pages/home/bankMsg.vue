@@ -67,12 +67,12 @@
             <span>{{server}}</span>元
           </div>
         </div>
-        <div class="integralList">
+        <!-- <div class="integralList">
           <span class="name">平台费用</span>
           <div class="integralNum">
             <span>{{platform}}</span>元
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="exchangeBtn" @click="goIntegral()">开始兑换</div>
@@ -165,11 +165,9 @@ export default {
       return ((this.integral * this.goodType.hy_money) * 0.9 / 10000).toFixed(2);
     },
     server: function() {
-      return ((this.integral * this.goodType.hy_money) * 0.08 / 10000).toFixed(2);
+      return ((this.integral * this.goodType.hy_money) * 0.1 / 10000).toFixed(2);
     },
-    platform: function() {
-      return ((this.integral * this.goodType.hy_money) * 0.02/ 10000).toFixed(2);
-    },
+
     unit: function() {
       if (this.integral >= 10000000) {
         return "千万";
