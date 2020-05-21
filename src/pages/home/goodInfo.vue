@@ -204,18 +204,20 @@ export default {
     },
     goIntegral: function() {
       let type = this.list[0].dui.type;
+      let that = this;
       if (type.indexOf("4") >= 0) {
-        this.$router.push({
+        that.$router.push({
           name: "integral",
           query: {
-            id: this.list[0].dui.id
+            id: that.list[0].dui.id
           }
         });
       } else {
-        this.$router.push({
+        that.$router.push({
           name: "baodan",
           query: {
-            id: this.list[0].did
+            id: that.list[0].did,
+            bankId: that.goods_id
           }
         });
       }

@@ -31,8 +31,8 @@ export const getgoodsProduct = function (bank_id,) {
   return http.post('/index/product_list', {bank_id: bank_id,})
 }
 // 积分兑现介绍
-export const getgoodsDetail = function (goods_id,) {
-  return http.post('/index/goods_detail', {goods_id: goods_id,})
+export const getgoodsDetail = function (goods_id,bank_id) {
+  return http.post('/index/goods_detail2', {goods_id: goods_id,bank_id:bank_id})
 }
 
 // 上传图片
@@ -50,8 +50,8 @@ export const getOrderDetail = function (order_id,) {
   return http.post('My/order_detail', {order_id:order_id,})
 }
 // 申请报单
-export const setOrder = function (pro_id,sms,img,orderSn,sign,name,mobile,address,fwf) {
-  return http.post('index/setOrder', {pro_id:pro_id,sms:sms,img:img,orderSn:orderSn,sign:sign,name:name,mobile:mobile,address:address,fwf:fwf})
+export const setOrder = function (pro_id,sms,img,orderSn,sign,name,mobile,address,fwf,num) {
+  return http.post('index/setOrder', {pro_id:pro_id,sms:sms,img:img,orderSn:orderSn,sign:sign,name:name,mobile:mobile,address:address,fwf:fwf,num:num})
 }
 
 

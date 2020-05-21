@@ -116,7 +116,7 @@ export default {
       var userInfo = store.state.global.userName
       var browser = api.require("webBrowser");
       browser.open({
-        url: 'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname='+userInfo.stock_name+''
+        url:  'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname=' + userInfo.stock_name +'-'+'SN:'+userInfo.sn+''
       });
     }
   }

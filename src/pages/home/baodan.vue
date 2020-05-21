@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       goods_id: this.$route.query.id,
+      bank_id: this.$route.query.bankId,
       list: [], //产品类型列表
       pro_id: 0, //产品类型ID
       bankInfo: [], //银行信息
@@ -97,7 +98,10 @@ export default {
       price: "",
       changeValue: 1, //兑换数量
       mescroll: null, // mescroll实例对象
-      mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
+      mescrollDown: {
+        auto: false,
+        use: false
+      }, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
       mescrollUp: {
         auto: false
       },
@@ -248,7 +252,7 @@ export default {
       let that = this;
       this.goods_id = this.$route.query.id;
       apiHttp
-        .getgoodsDetail(this.goods_id, store.state.global.token)
+        .getgoodsDetail(this.goods_id, this.$route.query.bankId)
         .then(ret => {
           if (ret.code === 1) {
             that.list = ret.data.list;
@@ -454,6 +458,7 @@ export default {
           this.mobile,
           this.address,
           fwf,
+          this.changeValue
         )
         .then(res => {
           if (res.code == 1) {
