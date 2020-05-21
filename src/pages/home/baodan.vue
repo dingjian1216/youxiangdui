@@ -252,7 +252,7 @@ export default {
       let that = this;
       this.goods_id = this.$route.query.id;
       apiHttp
-        .getgoodsDetail(this.goods_id, this.$route.query.bankId)
+        .getgoodsDetail2(this.goods_id, this.$route.query.bankId)
         .then(ret => {
           if (ret.code === 1) {
             that.list = ret.data.list;

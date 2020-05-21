@@ -31,8 +31,12 @@ export const getgoodsProduct = function (bank_id,) {
   return http.post('/index/product_list', {bank_id: bank_id,})
 }
 // 积分兑现介绍
-export const getgoodsDetail = function (goods_id,bank_id) {
+export const getgoodsDetail2 = function (goods_id,bank_id) {
   return http.post('/index/goods_detail2', {goods_id: goods_id,bank_id:bank_id})
+}
+
+export const getgoodsDetail = function (goods_id) {
+  return http.post('/index/goods_detail', {goods_id: goods_id})
 }
 
 // 上传图片
