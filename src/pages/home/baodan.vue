@@ -24,31 +24,37 @@
           <x-number title="数量" v-model="changeValue" :min="1"></x-number>
         </group>
         <div class="prove" v-show="type.indexOf('2')>=0">
-          <div class="title">
-            请上传券码截图
-            <span @click="captureImage">拍照</span>
-          </div>
+          <div class="title">请上传券码截图</div>
           <div class="imgBox">
             <div class="imglist" v-for="(item,index) in imgSrc" :key="index">
               <img class="aui-margin-r-15" :src="item" />
               <span class="iconfont icon-close-b" @click="delImgList(index)"></span>
             </div>
             <span class="iconfont icon-tianjiatupian" @click="addImg()"></span>
+            <div class="photograph">
+              <img src="../../assets/img/camera.png" alt @click="captureImage" />
+            </div>
           </div>
         </div>
         <div class="sms" v-show="type.indexOf('3')>=0">
           <div class="title" @click="shibie">
             点击右侧上传短信截图
-            <img src="../../assets/img/you.png" alt class="you" />
+            <img src="../../assets/img/camera.png" alt />
           </div>
           <div class="smsBox">
             <textarea placeholder="兑换码短信" v-model="sms"></textarea>
           </div>
         </div>
         <group>
-          <x-input title="真实姓名：" placeholder="请输入真实姓名" v-model="realname" :show-clear='false' ></x-input>
-          <x-input title="手机号码:" placeholder="请输入手机号码" v-model="mobile" type="number" :show-clear='false' ></x-input>
-          <x-input title="服务费(%):" placeholder="请输入服务费" v-model="fwf" :show-clear='false' ></x-input>
+          <x-input title="真实姓名：" placeholder="请输入真实姓名" v-model="realname" :show-clear="false"></x-input>
+          <x-input
+            title="手机号码:"
+            placeholder="请输入手机号码"
+            v-model="mobile"
+            type="number"
+            :show-clear="false"
+          ></x-input>
+          <x-input title="服务费(%):" placeholder="请输入服务费" v-model="fwf" :show-clear="false"></x-input>
         </group>
         <div class="autograph">
           <img :src="sign" alt v-if="sign" class="sign" @click="goSign" />
@@ -85,7 +91,7 @@ export default {
       couponMoney: "", //优惠金额
       couponId: "", // 优惠券Id
       lang: "", //优惠券数量
-      fwf: '10',//服务费
+      fwf: "10", //服务费
       sign: "",
       imgarr: "",
       goodName: "",
@@ -446,7 +452,7 @@ export default {
         this.$vux.toast.text("请输入服务费");
         return;
       }
-      let fwf = this.fwf / 100
+      let fwf = this.fwf / 100;
       apiHttp
         .setOrder(
           this.pro_id,
@@ -773,6 +779,12 @@ export default {
     }
     .prove {
       background: #ffffff;
+      .title {
+        img {
+          width: 0.5rem;
+          height: 0.4rem;
+        }
+      }
       .title-right {
         margin-left: 5px;
         color: #b2b2b2;
@@ -805,6 +817,16 @@ export default {
             overflow: hidden;
           }
         }
+        .photograph {
+          display: inline-block;
+          width: 1.4rem;
+          text-align: center;
+          padding: 0.1rem;
+          box-sizing: border-box;
+          img {
+            width: 100%;
+          }
+        }
       }
       .icon-tianjiatupian {
         font-size: 1.4rem;
@@ -812,6 +834,12 @@ export default {
     }
     .sms {
       background: #ffffff;
+      .title {
+        img {
+          width: 0.5rem;
+          height: 0.4rem;
+        }
+      }
       .you {
         width: 0.4rem;
         height: 0.4rem;

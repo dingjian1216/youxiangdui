@@ -197,7 +197,8 @@ export default {
         this.$router.push({
           name: "baodan",
           query: {
-            id: id
+            id: id,
+            bankId: that.goods_id
           }
         });
       }

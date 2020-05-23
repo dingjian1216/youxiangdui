@@ -9,7 +9,7 @@ let baseApiUrl = window.location.host
 if (baseApiUrl.indexOf('192.168') !== -1 || baseApiUrl.indexOf('localhost') !== -1) {
   baseApiUrl = '/api/'
 } else {
-  baseApiUrl = 'https://uat.xingciji.com/api/'
+  baseApiUrl = 'https://uat.xingciji.com'
 }
 axios.defaults.baseURL = baseApiUrl
 

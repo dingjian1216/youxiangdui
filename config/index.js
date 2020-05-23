@@ -16,7 +16,7 @@ module.exports = {
         target: 'https://uat.xingciji.com',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/api'
+          '^/api': ''
         }
       }
 	},

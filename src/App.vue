@@ -4,6 +4,42 @@
     <div class="viewBox" :style="{top: h}">
       <router-view v-if="isRouterAlive" />
     </div>
+    <!-- 后台添加更新 -->
+    <div v-transfer-dom>
+      <x-dialog v-model="showToast1" class="updateBox">
+        <!--<div class="weui-mask"></div>-->
+        <div class="update">
+          <img src="./assets/img/update.png" alt class="bg" />
+          <div class="contentBox">
+            <div class="add" v-if="version.remark">
+              <p class="t">新版本特性</p>
+              <p class="info">{{version.remark}}</p>
+            </div>
+            <div class="update_btn">
+              <span @click="downWgt">立即升级</span>
+            </div>
+          </div>
+        </div>
+      </x-dialog>
+    </div>
+
+    <!-- 下载进度 -->
+    <div v-transfer-dom>
+      <x-dialog
+        v-model="showToast4"
+        :dialog-style="{'max-width': '100%', 'background-color': 'transparent'}"
+        class="progressBox"
+      >
+        <div class="progressBg">
+          <img src="./assets/img/updateBox.png" alt />
+          <span  class="prState">{{progressState}}</span>
+          <x-progress :percent="percent" :show-cancel="false"></x-progress>
+          <span class="title">新版本正在努力的更新中，请稍等</span>
+        </div>
+      </x-dialog>
+    </div>
+
+    <!-- 激活终端 -->
     <div v-transfer-dom>
       <x-dialog v-model="SnName" id="snAction">
         <div class="snUserMsg">
@@ -35,11 +71,12 @@
 </template>
 <script>
 import * as utils from "./utils";
-import { XDialog, Confirm, TransferDomDirective as TransferDom } from "vux";
+import { XDialog, Confirm,XProgress, TransferDomDirective as TransferDom } from "vux";
 export default {
   components: {
     XDialog,
-    Confirm
+    Confirm,
+    XProgress
   },
   directives: {
     TransferDom
@@ -65,6 +102,10 @@ export default {
       iosh: 20,
       hideTitle: ["home", "my", "sign"],
       version: "",
+      progressState: '准备中',
+      percent: 0,
+      showToast1: false,
+      showToast4: false,
       transitionName: "",
       address: ""
     };
@@ -132,14 +173,9 @@ export default {
     } else {
       that.colors = "#fff";
     }
-    let sn = this.$store.state.global.sn;
-    let name = this.$store.state.global.userName;
-    if (!sn || !name) {
-      this.isSn();
-      this.getAddress();
-    } else {
-      this.getAdvertisement();
-    }
+    
+    this.isSn();
+    this.getAddress();
   },
   methods: {
     reload() {
@@ -148,6 +184,49 @@ export default {
         this.isRouterAlive = true;
       });
     },
+    // 检查更新
+    getVersion(){
+     let that = this
+      this.$http.post('/agent/login/checkVersion', {
+        type: 2,
+        version: api.appVersion,
+      }, false, true).then(res => {
+        if (res.code === 1) {
+            if(res.data == 0){
+              this.getAdvertisement();
+            }else{
+              this.version = res.data
+              this.showToast1 = true
+            }
+        }
+      })
+    },
+    downWgt() {
+      let that = this;
+      this.showToast1 = false;
+      that.showToast4 = true;
+      api.download(
+        {
+          url: that.version.src,
+          report: true
+        },
+        function(ret, err) {
+          if (ret && ret.state === 0) {
+            that.percent = parseInt(ret.percent);
+            // that.perCon = parseInt(ret.percent) + '%'
+            that.progressState = "下载中" + that.percent + "%";
+          }
+          if (ret && ret.state === 1) {
+            that.progressState = "安装中";
+            let savePath = ret.savePath;
+            api.installApp({
+              appUri: savePath
+            });
+          }
+        }
+      );
+    },
+
     isSn() {
       let that = this;
       let Getsn = api.require("moduleDemo");
@@ -160,18 +239,19 @@ export default {
       });
     },
     checkSN(sn) {
-      this.$http.post("/stock/checkSN", { sn: sn }).then(res => {
+      this.$http.post("/api/stock/checkSN", { sn: sn }).then(res => {
         if (res.code === 1) {
-          if(res.data.status !== 2){
-            this.SnName = true
-          }else{
+          if (res.data.status !== 2) {
+            this.SnName = true;
+          } else {
             this.$store.commit("setUserName", res.data);
+            this.getVersion()
           }
         }
       });
     },
     getAdvertisement() {
-      this.$http.post("news/getAdvertisement", {}).then(res => {
+      this.$http.post("/api/news/getAdvertisement", {}).then(res => {
         if (res.code === 1 && res.data.cover) {
           this.activity = true;
           this.active = res.data;
@@ -189,7 +269,6 @@ export default {
         this.activity = false;
       }
     },
-
     getAddress() {
       var bMap = api.require("bMap");
       var that = this;
@@ -230,7 +309,7 @@ export default {
     onConfirm(value) {
       let that = this;
       this.$http
-        .post("/stock/transfer_active", {
+        .post("/api/stock/transfer_active", {
           sn: this.sn,
           name: this.name,
           address: this.address,
@@ -241,7 +320,7 @@ export default {
           if (res.code == 1) {
             this.SnName = false;
             that.$vux.toast.text(res.msg);
-            that.getAdvertisement();
+            that.getVersion()
             that.$store.commit("setUserName", res.data);
           } else {
             that.$vux.toast.text(res.msg);
@@ -312,6 +391,190 @@ export default {
     bottom: 0;
   }
 }
+
+
+.updateBox {
+  .weui-dialog {
+    max-width: 5.4rem !important;
+    width: 5.4rem !important;
+  }
+  .weui-mask {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .weui-dialog {
+    background: none;
+  }
+  .update {
+    position: relative;
+    /*left: 50%;*/
+    /*top: 50%;*/
+    /*transform: translate(-50%, -50%);*/
+    background: rgba(255, 255, 255, 1);
+    width: 5.4rem;
+    overflow: hidden;
+    border-radius: 0.2rem;
+    .bg {
+      width: 100%;
+      float: left;
+    }
+    .contentBox {
+      width: 100%;
+      float: left;
+      background: #fff;
+      padding: 0.2rem 0.4rem 0.4rem;
+      box-sizing: border-box;
+      /*border-radius:  0 0 0.2rem 0.2rem;*/
+    }
+    .add {
+      width: 100%;
+      text-align: center;
+      p {
+        text-align: center;
+        color: #666;
+      }
+      .t {
+        font-size: 0.36rem;
+        color: #3c3c3c;
+      }
+      .info {
+        margin-top: 0.2rem;
+        font-size: 0.28rem;
+        color: #666;
+        padding: 0 0.3rem;
+        display: flex;
+        align-items: flex-start;
+        p {
+          display: -webkit-box;
+          /*! autoprefixer: off */
+          -webkit-box-orient: vertical;
+          /* autoprefixer: on */
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          text-align: left;
+        }
+        span {
+          display: inline-block;
+          width: 0.14rem;
+          height: 0.14rem;
+          background: linear-gradient(to right, #d479ef, #a282ed);
+          transform: rotate(45deg);
+          margin-right: 0.1rem;
+          margin-top: 0.16rem;
+        }
+      }
+      img {
+        margin-top: 0.6rem;
+        width: 0.76rem;
+        height: 0.76rem;
+      }
+    }
+    .update_btn {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: space-around;
+      span {
+        display: inline-block;
+        width: 2rem;
+        height: 0.6rem;
+        border-radius: 0.3rem;
+        text-align: center;
+        background: #e5e5e5;
+        line-height: 0.6rem;
+        font-size: 0.3rem;
+        color: #999;
+      }
+      span:last-of-type {
+        color: #fff;
+        background: linear-gradient(to right, #d456ff, #7468ff);
+      }
+    }
+    .close {
+      width: 0.76rem;
+      height: 0.76rem;
+      position: absolute;
+      bottom: -0.76rem;
+      left: 50%;
+      margin-left: -0.38rem;
+    }
+  }
+}
+
+.progressBox {
+  .weui-dialog {
+    border-radius: 0;
+    max-width: 5.35rem !important;
+    width: 5.35rem !important;
+  }
+  /*.title{*/
+  /*display: block;*/
+  /*margin-bottom: 10px;*/
+  /*}*/
+  .progressBg {
+    position: relative;
+    width: 5.35rem;
+    height: 4.35rem;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .weui-progress {
+      position: absolute;
+      left: 6%;
+      width: 88%;
+      bottom: 0.7rem;
+      .weui-progress__bar {
+        height: 0.2rem;
+        border-radius: 0.1rem;
+      }
+      .weui-progress__inner-bar {
+        background: #ff9b84;
+        border-radius: 0.1rem;
+      }
+    }
+    .prState{
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 1rem;
+      text-align: center;
+      color: #999;
+      font-size: 0.28rem;
+    }
+    .title {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 0.14rem;
+      text-align: center;
+      color: #999;
+      font-size: 0.24rem;
+    }
+    .update_btn {
+      position: absolute;
+      bottom: 0.3rem;
+      width: 100%;
+      left: 0;
+      display: flex;
+      justify-content: space-around;
+      span {
+        display: inline-block;
+        width: 2rem;
+        height: 0.6rem;
+        border-radius: 0.3rem;
+        text-align: center;
+        background: #e5e5e5;
+        line-height: 0.6rem;
+        font-size: 0.3rem;
+        color: #999;
+      }
+      span:last-of-type {
+        color: #fff;
+        background: linear-gradient(to right, #d456ff, #7468ff);
+      }
+    }
+  }
+}
+
 
 #snAction {
   .title {
