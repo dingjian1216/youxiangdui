@@ -42,7 +42,7 @@
           <span class="right">{{info.create_time}}</span>
         </div>
         <div class="item" v-show="info['status'] == 2">
-          <span>报单时间</span>
+          <span>驳回原因</span>
           <span class="right">{{info.info}}</span>
         </div>
       </div>
@@ -244,7 +244,7 @@ export default {
                     {
                       rowtype: "printText",
                       text:
-                        "  本小票金额只做参考,以实际到账金额为准,最  终解释权为积分秒兑"
+                        "  本小票金额只做参考,以实际到账金额为准,终解释权为可兑智能终端"
                     },
                     {
                       rowtype: "lineWrap",

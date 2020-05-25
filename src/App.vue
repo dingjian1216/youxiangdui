@@ -394,10 +394,7 @@ export default {
 
 
 .updateBox {
-  .weui-dialog {
-    max-width: 5.4rem !important;
-    width: 5.4rem !important;
-  }
+
   .weui-mask {
     background: rgba(0, 0, 0, 0.7);
   }

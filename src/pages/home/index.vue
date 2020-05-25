@@ -176,6 +176,7 @@ export default {
     height: auto;
     overflow-y: scroll;
     background: #eeeeee;
+    padding-bottom: 0.2rem;
   }
   .bankBox {
     height: 100%;

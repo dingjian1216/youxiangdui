@@ -39,16 +39,20 @@
         </a>
         报单标准
       </x-header>
-      <div class="nav">
-        <div class="navList" @click="getText()">
-          <img src="../../assets/img/picText.png" alt />
-          <p>本机查看图文详情</p>
+      <div class="standard">
+        <div class="nav">
+          <div class="navList" @click="getText()">
+            <img src="../../assets/img/picText.png" alt />
+            <p>本机查看图文详情</p>
+          </div>
+          <div class="navList">
+            <qrcode :value="code" :size="100"></qrcode>
+            <p>手机查看图文详情</p>
+          </div>
         </div>
-        <div class="navList">
-          <qrcode :value="code" :size="100"></qrcode>
-          <p>手机查看图文详情</p>
-        </div>
+        <img :src="duiImg" class="duiImg" alt />
       </div>
+
       <div class="footer" @click="openChange">
         <span>已知晓, 下一步</span>
       </div>
@@ -74,7 +78,8 @@ export default {
       showCode: true,
       type: true,
       index: 0, //点击的索引
-      changeName: "去兑换"
+      changeName: "去兑换",
+      duiImg: ""
     };
   },
   mounted() {
@@ -109,7 +114,8 @@ export default {
       this.index = index;
       this.code = this.list[index].content_url;
       this.showCode = false;
-      let id = this.list[this.index].did;
+      let id = this.list[index].did;
+      this.duiImg = this.list[index].dui.img;
       // 获取设备
       apiHttp.getgoodsDetail(id).then(res => {
         if (res.code === 1) {
@@ -344,8 +350,9 @@ export default {
     font-size: 0.34rem;
   }
   .goodTwo {
+    position: relative;
+    height: 100%;
     .nav {
-      margin: 0 0.3rem;
       border-radius: 0.2rem;
       padding: 0.5rem 0;
       display: flex;
@@ -357,6 +364,17 @@ export default {
         img {
           width: 100px;
         }
+      }
+    }
+    .standard {
+      position: absolute;
+      top: 1rem;
+      left: 0.3rem;
+      right: 0.3rem;
+      bottom: 1.2rem;
+      overflow-y: auto;
+      .duiImg{
+        margin-top: 0.2rem;
       }
     }
   }
