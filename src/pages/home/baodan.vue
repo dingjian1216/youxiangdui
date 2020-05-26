@@ -453,41 +453,47 @@ export default {
         return;
       }
       let fwf = this.fwf / 100;
-      apiHttp
-        .setOrder(
-          this.pro_id,
-          this.sms,
-          imgPic,
-          this.orderSn,
-          this.sign,
-          this.realname,
-          this.mobile,
-          this.address,
-          fwf,
-          this.changeValue
-        )
-        .then(res => {
-          if (res.code == 1) {
-            this.price = res.data.price;
-            this.$vux.toast.text("申请成功");
-            this.printData();
-          } else if (res.code == -1) {
-            this.$vux.confirm.show({
-              title: "提示",
-              content: res.msg,
-              onCancel() {
-                console.log("plugin cancel");
-              },
-              onConfirm() {
-                that.$router.push({
-                  name: "my"
+      that.$vux.confirm.show({
+        title: "提示",
+        content: "您申请报单数量为 " + that.changeValue + " 个",
+        onConfirm() {
+          apiHttp
+            .setOrder(
+              that.pro_id,
+              that.sms,
+              imgPic,
+              that.orderSn,
+              that.sign,
+              that.realname,
+              that.mobile,
+              that.address,
+              fwf,
+              that.changeValue
+            )
+            .then(res => {
+              if (res.code == 1) {
+                that.price = res.data.price;
+                that.$vux.toast.text("申请成功");
+                that.printData();
+              } else if (res.code == -1) {
+                that.$vux.confirm.show({
+                  title: "提示",
+                  content: res.msg,
+                  onCancel() {
+                    console.log("plugin cancel");
+                  },
+                  onConfirm() {
+                    that.$router.push({
+                      name: "my"
+                    });
+                  }
                 });
+              } else {
+                that.$vux.toast.text(res.msg);
               }
             });
-          } else {
-            that.$vux.toast.text(res.msg);
-          }
-        });
+        }
+      });
     },
     dateFormat(fmt, date) {
       let ret;

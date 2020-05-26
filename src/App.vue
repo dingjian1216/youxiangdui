@@ -100,7 +100,7 @@ export default {
       anh: 25,
       SnName: false,
       iosh: 20,
-      hideTitle: ["home", "my", "sign"],
+      hideTitle: ["home", "my", "sign", 'price'],
       version: "",
       progressState: '准备中',
       percent: 0,

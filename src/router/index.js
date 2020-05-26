@@ -136,7 +136,7 @@ const router = new Router({
           path: '/price',
           name: 'price',
           component: Price,
-          meta: { title: '用户表', keepAlive: false, isShowHead: true, isShowTab: false}
+          meta: { title: '用户表', keepAlive: false, isShowHead: false, isShowTab: false}
         },
       ]
     },
