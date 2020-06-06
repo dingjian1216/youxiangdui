@@ -289,25 +289,17 @@ export default {
     // 拍照
     captureImage() {
       let This = this;
-      api.getPicture(
-        {
-          sourceType: "camera",
-          mediaValue: "pic",
-          destinationType: "base64",
-          allowEdit: true,
-          preview: true
-        },
-        function(ret, err) {
-          console.log("拍照" + JSON.stringify(ret));
-          if (ret.data) {
-            api.ajax(
+      var cameraTool = api.require('cameraTool');
+      cameraTool.openCamera(function(ret, err) {
+        console.log("拍照" + JSON.stringify(ret));
+         api.ajax(
               {
                 url: "http://uat.xingciji.com/api/index/upload",
                 method: "post",
                 timeout: 30,
                 data: {
                   files: {
-                    file: ret.data
+                    file: ret.imgPath
                   }
                 }
               },
@@ -321,11 +313,45 @@ export default {
                 }
               }
             );
-          } else {
-            console.log(JSON.stringify(err));
-          }
-        }
-      );
+       });
+//      
+      // api.getPicture(
+      //   {
+      //     sourceType: "camera",
+      //     mediaValue: "pic",
+      //     destinationType: "base64",
+      //     allowEdit: true,
+      //     preview: true
+      //   },
+      //   function(ret, err) {
+      //     console.log("拍照" + JSON.stringify(ret));
+      //     if (ret.data) {
+      //       api.ajax(
+      //         {
+      //           url: "http://uat.xingciji.com/api/index/upload",
+      //           method: "post",
+      //           timeout: 30,
+      //           data: {
+      //             files: {
+      //               file: ret.data
+      //             }
+      //           }
+      //         },
+      //         function(ret, err) {
+      //           if (ret.code == 1) {
+      //             var src = ret.data.img;
+      //             This.imgSrc.push(src);
+      //           } else {
+      //             This.$vux.toast.text(ret.msg);
+      //             return;
+      //           }
+      //         }
+      //       );
+      //     } else {
+      //       console.log(JSON.stringify(err));
+      //     }
+      //   }
+      // );
     },
     // 改变产品
     getNum(id, name, num) {
@@ -427,11 +453,7 @@ export default {
     setOrder() {
       let imgPic = JSON.stringify(this.imgSrc);
       let that = this;
-      if (!this.sign) {
-        this.$vux.toast.text("请签名后提交申请");
-        return;
-      }
-      if (!imgPic && !this.sms) {
+      if (imgPic.length <= 2  && !this.sms) {
         this.$vux.toast.text("请上传券码截图或短信信息");
         return;
       }
@@ -450,6 +472,10 @@ export default {
       }
       if (!this.fwf) {
         this.$vux.toast.text("请输入服务费");
+        return;
+      }
+      if (!this.sign) {
+        this.$vux.toast.text("请签名后提交申请");
         return;
       }
       let fwf = this.fwf / 100;

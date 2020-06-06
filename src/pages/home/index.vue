@@ -113,11 +113,21 @@ export default {
       });
     },
     service() {
-      var userInfo = store.state.global.userName
-      var browser = api.require("webBrowser");
-      browser.open({
-        url:  'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname=' + userInfo.stock_name +'-'+'SN:'+userInfo.sn+''
-      });
+      // var userInfo = store.state.global.userName
+      // var browser = api.require("webBrowser");
+      // browser.open({
+      //   url:  'http://mam.jiweilianmeng.com/Web/im.aspx?_=t&accountid=119041&visitorname=' + userInfo.stock_name +'-'+'SN:'+userInfo.sn+''
+      // });
+      api.openWin({
+          name: 'server',
+          url: 'widget://html/server.html',
+          rect: {
+            w: 36,
+            h: 36,
+            marginRight: 10,
+            marginBottom: 200
+          },
+        })
     }
   }
 };
