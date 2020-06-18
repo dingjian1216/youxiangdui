@@ -294,7 +294,7 @@ export default {
         console.log("拍照" + JSON.stringify(ret));
          api.ajax(
               {
-                url: "http://uat.xingciji.com/api/index/upload",
+                url: "http://kd.youxiangdui.net/api/index/upload",
                 method: "post",
                 timeout: 30,
                 data: {
@@ -419,7 +419,7 @@ export default {
       let that = this;
       api.ajax(
         {
-          url: "http://uat.xingciji.com/api/index/upload",
+          url: "http://kd.youxiangdui.net/api/index/upload",
           method: "post",
           timeout: 30,
           data: {

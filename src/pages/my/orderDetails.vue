@@ -76,6 +76,7 @@ export default {
     return {
       order_id: this.$route.query.id,
       info: "",
+      phone: "",
       sn: "",
       userName: "",
       daYinTime: ''
@@ -110,6 +111,9 @@ export default {
       var SunmiPrinter = api.require("sunmiPrinter");
       let format = "down" + new Date().getTime() + ".jpg";
       let info = that.info;
+      let mobile = info.member_mobile
+      let reg=/^(\d{3})\d*(\d{4})$/
+      let new_mobile  = mobile.replace(reg,'$1****$2')
       if(this.daYinTime){
         this.$vux.toast.text('已打印,请勿重复打印');
         return
@@ -134,15 +138,11 @@ export default {
                     },
                     {
                       rowtype: "setFontSize",
-                      fontsize: 28
+                      fontsize: 30
                     },
                     {
                       rowtype: "printText",
-                      text: "可兑智能POS机\n"
-                    },
-                    {
-                      rowtype: "lineWrap",
-                      n: 1
+                      text: "可兑积分兑换交易凭证\n"
                     },
                     {
                       rowtype: "setAlignment",
@@ -150,15 +150,7 @@ export default {
                     },
                     {
                       rowtype: "setFontSize",
-                      fontsize: 24
-                    },
-                    {
-                      rowtype: "printText",
-                      text: "  积分兑换交易凭证\n"
-                    },
-                    {
-                      rowtype: "setFontSize",
-                      fontsize: 16
+                      fontsize: 23
                     },
                     {
                       rowtype: "printText",
@@ -166,47 +158,63 @@ export default {
                     },
                     {
                       rowtype: "setFontSize",
-                      fontsize: 20
+                      fontsize: 23
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 1
                     },
                     {
                       rowtype: "printText",
-                      text: "  ------------------------------------\n"
+                      text: "---------------------------\n"
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 0
                     },
                     {
                       rowtype: "printText",
-                      text: "  转让方:     " + info.member_name + "\n"
+                      text: "转让方:    " + info.member_name + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  联系方式:   " + info.member_mobile + "\n"
+                      text: "联系方式:  " + new_mobile + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  商品:       " + info.good_name + "\n"
+                      text: "商品:      " + info.good_name + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  交易金额:    " + info.price + "\n"
+                      text: "交易金额:  " + info.price + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  消耗积分:    " + info.integral + "\n"
+                      text: "消耗积分:  " + info.integral + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  交易流水号:  " + info.order_number + "\n"
+                      text: "交易流水号:" + info.order_number + "\n"
                     },
                     {
                       rowtype: "printText",
-                      text: "  交易时间:    " + info.create_time + "\n"
+                      text: "交易时间:  " + info.create_time + "\n"
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 1
                     },
                     {
                       rowtype: "printText",
-                      text: "  ------------------------------------\n"
+                      text: "---------------------------\n"
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 0
                     },
                     {
                       rowtype: "printText",
-                      text: "  签名:\n"
+                      text: "签名:\n"
                     },
                     {
                       rowtype: "setAlignment",
@@ -227,24 +235,32 @@ export default {
                     {
                       rowtype: "printText",
                       text:
-                        "    本人确认以上物品交易抵扣的积分是本  人所持有的，且同意将上述积分数量范围  内兑换的礼品用上述协商价格不可撤销的  转让给受让人。如因此产生纠纷，双方可  协商或向人民法院起诉解决。\n"
+                        "本人确认以上物品交易抵扣的积分是本人所持有的，且同意将上述积分数量范围内兑换的礼品用上述协商价格不可撤销地转让给受让人。如因此产生纠纷，双方可协商或向人民法院起诉解决。\n"
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 1
                     },
                     {
                       rowtype: "printText",
-                      text: "  ------------------------------------\n"
+                      text: "---------------------------\n"
                     },
                     {
                       rowtype: "setFontSize",
-                      fontsize: 18
+                      fontsize: 22
+                    },
+                    {
+                      rowtype: "setAlignment",
+                      alignment: 0
                     },
                     {
                       rowtype: "printText",
-                      text: "  SN: " + that.sn + "\n"
+                      text: "SN: " + that.sn + "\n"
                     },
                     {
                       rowtype: "printText",
                       text:
-                        "  本小票金额只做参考,以实际到账金额为准,终解释权为可兑智能终端"
+                        "本小票金额只做参考,以实际到账金额为准,终解释权为可兑智能终端"
                     },
                     {
                       rowtype: "lineWrap",
